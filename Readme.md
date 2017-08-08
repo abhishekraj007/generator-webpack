@@ -1,9 +1,10 @@
 
-# Generator lollypop version-2
-- The updated version of lollypop generator with webpack
+# Generator webpack material
+- Yeoman generator with webpack, PUG, SCSS and material design. 
 
 ## Features
 
 - Webpack
 - SASS
 - PUG
+- Material Design
