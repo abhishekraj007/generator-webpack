@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    "stylelint-scss"
+  ],
+  "extends": "stylelint-config-standard",
+  "syntax": "scss",
+  "rules": {
+    "indentation": "tab"
+  }
+}

@@ -1,6 +1,7 @@
 'use strict';
 
 let HtmlWebpackPlugin = require('html-webpack-plugin');
+var StyleLintPlugin = require('stylelint-webpack-plugin');
 let path = require('path');
 
 module.exports = {
@@ -55,7 +56,7 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        loaders: ['style-loader','css-loader','resolve-url-loader','postcss-loader','sass-loader?sourceMap']
+        loaders: ['style-loader', 'css-loader', 'resolve-url-loader', 'postcss-loader', 'sass-loader?sourceMap']
       },
       {
         test: /\.js$/,
@@ -73,7 +74,8 @@ module.exports = {
   devServer: {
     contentBase: './src',
     open: true,
-    port: 8000
+		port: 8000
+		// publicPath: '/'
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -83,6 +85,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/about.pug',
       filename: 'about.html'
-    })
+    }),
+    new StyleLintPlugin()
   ]
 };
