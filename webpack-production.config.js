@@ -1,85 +1,126 @@
-'use strict';
+'use strict'
 
-let ETP = require('extract-text-webpack-plugin');
-let HtmlWebpackPlugin = require('html-webpack-plugin');
-let copyWebpackPlugin = require('copy-webpack-plugin');
-let webpack = require('webpack');
-let path = require('path');
+const ETP = require('extract-text-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+const webpack = require('webpack')
+const path = require('path')
 
 module.exports = {
-  entry: [
-    './src/js/main.js'
-  ],
+  entry: {
+    main: './src/js/main.js'
+  },
   output: {
-    filename: './js/bundle.js',
-    path: path.resolve(__dirname, './dist')
-  },
-  eslint: {
-    configFile: './.eslintrc'
-  },
-  resolveUrlLoader: {
-    keepQuery: true,
-    sourceMap: true
+    filename: './js/[name].bundle.js',
+    path: path.resolve(__dirname, 'dist')
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.pug$/,
         include: path.join(__dirname, 'src'),
-        loaders: ['raw-loader', 'pug-html-loader']
+        use: ['raw-loader', 'pug-html-loader']
       },
       {
         test: /\.html$/,
         exclude: /node_modules/,
-        loader: 'html'
+        loader: 'html-loader'
       },
       {
         test: /\.(jpg|jpeg|gif|png|svg)$/,
         exclude: /node_modules/,
         include: path.join(__dirname, 'src/img'),
-        loader: "file-loader",
-        query: {
-          name: 'img/[name].[ext]',
-          publicPath: '../'
+        use: {
+          loader: 'file-loader',
+          query: {
+            name: 'img/[name].[ext]',
+            publicPath: '../'
+          }
         }
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         exclude: path.join(__dirname, 'src/img'),
-        loader: 'file-loader',
-        query: {
-          name: 'fonts/[name].[ext]',
-          publicPath: '../'
+        use: {
+          loader: 'file-loader',
+          query: {
+            name: 'fonts/[name].[ext]',
+            publicPath: '../'
+          }
         }
       },
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        loader: ETP.extract('style-loader', 'css-loader!resolve-url-loader!postcss-loader!sass-loader?sourceMap')
+        use: ETP.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader'
+              // options: {
+              //   sourceMap: true,
+              //   importLoaders: 3
+              // }
+            },
+            {
+              loader: 'resolve-url-loader'
+            },
+            {
+              loader: 'postcss-loader'
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true
+              }
+            }
+          ]
+        })
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        query: {
-          presets: ['react', 'es2015']
+        use: {
+          loader: 'babel-loader',
+          query: {
+            presets: ['env', 'es2015', 'es2015-ie']
+          }
         }
       }
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.es6']
+    extensions: ['.js', '.es6']
   },
   plugins: [
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({mangle: false, sourcemap: true}),
-    new ETP('./css/style.css',{allChunks: true}),
-    new copyWebpackPlugin([
-           { 
-             from: './src/img',
-             to: './img'
-           }
+    new CleanWebpackPlugin(['dist']),
+    new webpack.LoaderOptionsPlugin({
+      // Options...
+      options: {
+        resolveUrlLoader: {
+          keepQuery: true,
+          sourceMap: true
+        }
+      }
+    }),
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        ie8: false,
+        ecma: 8,
+        mangle: false,
+        sourceMap: true,
+        exclude: /\/node_modules/
+      }
+    }),
+    new ETP('./css/style.css', {allChunks: true}),
+    new CopyWebpackPlugin([
+      {
+        from: './src/img',
+        to: './img'
+      }
     ]),
     new HtmlWebpackPlugin({
       template: './src/index.pug',
@@ -93,19 +134,6 @@ module.exports = {
         collapseWhitespace: false,
         useShortDoctype: true
       }
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/about.pug',
-      filename: 'about.html',
-      inject: true,
-      minify: {
-        html5: true,
-        minifyCSS: true,
-        minifyJS: true,
-        decodeEntities: true,
-        collapseWhitespace: false,
-        useShortDoctype: true
-      }
     })
   ]
-};
+}

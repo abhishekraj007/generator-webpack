@@ -1,10 +1,7 @@
-
-# Generator webpack material
-- Yeoman generator with webpack, PUG, SCSS and material design. 
+# Factor Marketing Site
+- Yeoman generator with webpack, PUG, SCSS. 
 
 ## Features
-
 - Webpack
 - SASS
 - PUG
-- Material Design
