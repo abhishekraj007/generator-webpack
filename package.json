@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --colors --watch",
-    "prod": "webpack --config webpack-production.config.js -p",
+    "dev": "webpack-dev-server --env.dev=development --open --inline --watch",
+    "prod": "webpack --env.production --config webpack-production.config.js -p",
     "clean": "rimraf ./dist"
   },
   "author": "",
@@ -23,6 +23,7 @@
     "es6-shim": "^0.35.3",
     "eslint": "^4.0.0",
     "eslint-config-standard": "^10.2.1",
+    "eslint-config-webpack": "^1.2.5",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-loader": "^1.8.0",
     "eslint-plugin-compat": "^1.0.4",
@@ -34,6 +35,8 @@
     "express": "^4.14.1",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^0.11.2",
+    "friendly-errors-webpack-plugin": "^1.6.1",
+    "html-critical-webpack-plugin": "^1.0.1",
     "html-loader": "^0.4.4",
     "jquery": "^3.2.1",
     "node-libs-browser": "^2.0.0",

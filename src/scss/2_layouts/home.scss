@@ -1,56 +1,62 @@
 .loader {
-	height: 100vh;
-	flex: 1 1 auto;
-	transform: translateY(0%);
-	transition: transform 1s ease;
+  height: 100vh;
+  flex: 1 1 auto;
+  transform: translateY(0%);
+  transition: transform 1s ease;
 
-	&.active {
-		transform: translateY(100%);
-	}
+  &.active {
+    transform: translateY(100%);
+  }
 
-	&-container {
-		width: 100%;
-		height: 100vh;
-		display: flex;
-		overflow: hidden;
-	}
+  &-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+  }
 
-	&--1 {
-		background-color: white;
-		transition-delay: 1100ms;
-	}
+  &--1 {
+    background-color: white;
+    transition-delay: 1100ms;
+  }
 
-	&--2 {
-		background-color: grey;
-		transition-delay: 1000ms;
-	}
+  &--2 {
+    background-color: grey;
+    transition-delay: 1000ms;
+  }
 
-	&--3 {
-		background-color: rebeccapurple;
-		transition-delay: 900ms;
-	}
+  &--3 {
+    background-color: rebeccapurple;
+    transition-delay: 900ms;
+  }
 
-	&--4 {
-		background-color: grey;
-		transition-delay: 800ms;
-	}
+  &--4 {
+    background-color: grey;
+    transition-delay: 800ms;
+  }
 
-	&--5 {
-		background-color: rebeccapurple;
-		transition-delay: 700ms;
-	}
+  &--5 {
+    background-color: rebeccapurple;
+    transition-delay: 700ms;
+  }
 }
 
 .section {
-	height: 100vh;
-	width: 100%;
+  height: 100vh;
+  width: 100%;
 
-	&-2 {
-		background-color: goldenrod;
-	}
+  &-1 {
+    background: #16A085;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #F4D03F, #16A085);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #F4D03F, #16A085); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  }
 
-	&-3 {
-		background-color: red;
-	}
+  &-2 {
+    background-color: goldenrod;
+  }
+
+  &-3 {
+    background-color: red;
+  }
 }
 

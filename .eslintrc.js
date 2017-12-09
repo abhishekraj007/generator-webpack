@@ -1,4 +1,5 @@
 module.exports = {
+  "extends": "webpack",
   env: {
     browser: true,
     commonjs: true,
@@ -21,16 +22,17 @@ module.exports = {
     allowImportExportEverywhere: true
   },
   rules: {
-    // 'promise/always-return': 0,
-    // 'compat/compat': 1,
-    // 'node/no-deprecated-api': 2,
-    // 'node/no-extraneous-require': 2,
-    // 'node/no-missing-require': 2,
-    // 'import/no-unresolved': [2, { commonjs: true, amd: true }],
-    // 'import/named': 2,
-    // 'import/namespace': 2,
-    // 'import/default': 2,
-    // 'import/export': 2,
-    // 'no-console': 1
+    'promise/always-return': 0,
+    'compat/compat': 1,
+    'node/no-deprecated-api': 2,
+    'node/no-extraneous-require': 2,
+    'node/no-missing-require': 2,
+    'import/no-unresolved': [2, { commonjs: true, amd: true }],
+    'import/named': 2,
+    'import/namespace': 2,
+    'import/default': 2,
+    'import/export': 2,
+    'no-console': 0,
+    'semi': 0
   }
 }

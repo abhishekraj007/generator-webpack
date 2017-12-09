@@ -5,7 +5,6 @@ console.warn('Module Pattern Loaded');
 let myGradesCalculate = (function () {
   let grades = [10, 90, 75, 60, 55, 88, 85, 92];
 
-
   return {
 
     average: function () {

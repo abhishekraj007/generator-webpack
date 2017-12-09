@@ -11,4 +11,4 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('.loader--4').classList.add('active')
     document.querySelector('.loader--5').classList.add('active')
   }, 500)
-})
+});
