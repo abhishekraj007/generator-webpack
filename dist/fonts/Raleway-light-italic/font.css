@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Raleway-LightItalic';
+  src: url('Raleway-LightItalic.eot');
+  src: url('Raleway-LightItalic.woff2') format('woff2'),
+       url('Raleway-LightItalic.woff') format('woff'),
+       url('Raleway-LightItalic.ttf') format('truetype'),
+       url('Raleway-LightItalic.svg#Raleway-LightItalic') format('svg'),
+       url('Raleway-LightItalic.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+

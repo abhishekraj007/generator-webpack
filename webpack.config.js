@@ -26,6 +26,7 @@ module.exports = {
   context: PATHS.app,
 
   entry: {
+    // vendor: ['jquery'],
     index: `${PATHS.app}/js/main.js`,
     about: `${PATHS.app}/js/about.js`
   },
@@ -86,7 +87,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: 'img/[name].[ext]',
-            publicPath: '../'
+            publicPath: './'
           }
         }
       },
@@ -98,7 +99,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: 'fonts/[name].[ext]',
-            publicPath: '../'
+            publicPath: './'
           }
         }
       },
@@ -111,9 +112,9 @@ module.exports = {
           use: [
             {
               loader: 'css-loader',
-              query: {
-                sourceMap: true,
-                importLoaders: 3
+              options: {
+                url: false,
+                sourceMap: true
               }
             },
             {
@@ -176,6 +177,19 @@ module.exports = {
         'NODE_ENV': process.env.NODE_ENV
       }
     }),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'vendor',
+    //   // filename: "vendor.js"
+    //   // (Give the chunk a different name)
+
+    //   minChunks: Infinity
+    //   // (with more entries, this ensures that no other module
+    //   //  goes into the vendor chunk)
+    // }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new FriendlyErrorsWebpackPlugin({
       compilationSuccessInfo: {
@@ -211,6 +225,10 @@ module.exports = {
       cssProcessor: require('cssnano'),
       cssProcessorOptions: { discardComments: { removeAll: true } },
       canPrint: true
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.DEBUG': JSON.stringify(process.env.DEBUG)
     })
     // new StyleLintPlugin(lintStylesOptions)
   ]

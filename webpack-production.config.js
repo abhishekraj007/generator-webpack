@@ -5,7 +5,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 // const HtmlCriticalPlugin = require('html-critical-webpack-plugin');
+// const ManifestPlugin = require('webpack-manifest-plugin');
+// const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
+var ImageMinPlugin = require('imagemin-webpack-plugin').default;
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const path = require('path');
@@ -19,18 +23,27 @@ const PATHS = {
 module.exports = {
 
   entry: {
+    // vendor: ['jquery'],
     index: `${PATHS.app}/js/main.js`,
     about: `${PATHS.app}/js/about.js`
   },
 
+  devtool: 'source-map',
+
   output: {
     filename: './js/[name].bundle.js',
+    sourceMapFilename: '[file].map',
     path: path.resolve(__dirname, 'dist')
   },
 
   module: {
 
     rules: [
+      {
+        test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre'
+      },
       {
         test: /\.pug$/,
         include: path.join(__dirname, 'src'),
@@ -55,6 +68,19 @@ module.exports = {
         }
       },
 
+      // {
+      //   test: /\.(jpg|jpeg|gif|png|svg)$/,
+      //   exclude: /node_modules/,
+      //   include: path.join(__dirname, 'src/img'),
+      //   use: {
+      //     loader: 'url-loader',
+      //     options: {
+      //       name: 'img/[name].[ext]',
+      //       publicPath: '../'
+      //     }
+      //   }
+      // },
+
       {
         test: /\.(jpg|jpeg|gif|png|svg)$/,
         exclude: /node_modules/,
@@ -63,7 +89,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: 'img/[name].[ext]',
-            publicPath: '../'
+            publicPath: './'
           }
         }
       },
@@ -75,7 +101,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: 'fonts/[name].[ext]',
-            publicPath: '../'
+            publicPath: './'
           }
         }
       },
@@ -87,11 +113,12 @@ module.exports = {
           fallback: 'style-loader',
           use: [
             {
-              loader: 'css-loader'
-              // options: {
-              //   sourceMap: true,
-              //   importLoaders: 3
-              // }
+              loader: 'css-loader',
+              options: {
+                url: false,
+                sourceMap: true,
+                importLoaders: 3
+              }
             },
             {
               loader: 'resolve-url-loader'
@@ -131,8 +158,8 @@ module.exports = {
       // Options...
       options: {
         resolveUrlLoader: {
-          keepQuery: true,
-          sourceMap: true
+          keepQuery: true
+          // sourceMap: true
         }
       }
     }),
@@ -145,13 +172,32 @@ module.exports = {
         exclude: /\/node_modules/
       }
     }),
-    new ETP('./css/style.css', {allChunks: true}),
+    new ETP('./css/style.css', { allChunks: true }),
     new CopyWebpackPlugin([
       {
         from: './src/img',
         to: './img'
+      },
+      {
+        from: './src/fonts',
+        to: './fonts'
       }
     ]),
+    new ImageMinPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
+    new ImageMinPlugin({
+      test: /\.png$/i,
+      optipng: {
+        optimizationLevel: 6
+      }
+    }),
+    new ImageMinPlugin({
+      minFileSize: 10000, // Only apply this one to files over 10kb
+      jpegtran: { progressive: true }
+    }),
+    // new webpack.ProvidePlugin({
+    //   $: 'jquery',
+    //   jQuery: 'jquery'
+    // }),
     new HtmlWebpackPlugin({
       template: './src/index.pug',
       filename: 'index.html',
@@ -174,6 +220,10 @@ module.exports = {
         collapseWhitespace: false
       }
     }),
+    // new ManifestPlugin({
+    //   fileName: 'manifest.json'
+    // }),
+    // new DynamicCdnWebpackPlugin(),
     new OptimizeCssAssetsPlugin({
       assetNameRegExp: /\.optimize\.css$/g,
       cssProcessor: require('cssnano'),
