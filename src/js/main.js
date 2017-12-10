@@ -1,9 +1,9 @@
 import './modules/loaderAnim'
 
-console.log('Webpack has started!')
+console.log('All hail Webpack 3!')
 
 // Requiring the pug files for the HMR and Live reload
-require('../index.pug')
+// require('../index.pug')
 // require('../about.pug')
 
 require('../scss/main.scss')

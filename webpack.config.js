@@ -4,8 +4,7 @@ const ETP = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-
-var isProd = (process.env.NODE_ENV === 'production');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 let path = require('path');
 let webpack = require('webpack');
@@ -27,9 +26,8 @@ module.exports = {
   context: PATHS.app,
 
   entry: {
-    // app: './src/js/main.js',
-    main: `${PATHS.app}/js/main.js`
-    // index: `${PATHS.app}/index.pug`
+    index: `${PATHS.app}/js/main.js`,
+    about: `${PATHS.app}/js/about.js`
   },
 
   devtool: 'inline-source-map',
@@ -108,15 +106,15 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        use: ETP.extract({
+        use: ['css-hot-loader'].concat(ETP.extract({
           fallback: 'style-loader',
           use: [
             {
-              loader: 'css-loader'
-              // options: {
-              //   sourceMap: true,
-              //   importLoaders: 3
-              // }
+              loader: 'css-loader',
+              query: {
+                sourceMap: true,
+                importLoaders: 3
+              }
             },
             {
               loader: 'resolve-url-loader'
@@ -132,6 +130,7 @@ module.exports = {
             }
           ]
         })
+        )
       },
 
       {
@@ -182,24 +181,36 @@ module.exports = {
       compilationSuccessInfo: {
         messages: ['You application is running here http://localhost:3000'],
         notes: ['Webpack Dev Server is up and running']
-      },
-      onErrors: function (severity, errors) {
-        // You can listen to errors transformed and prioritized by the plugin
-        // severity can be 'error' or 'warning'
-        console.log(errors);
       }
     }),
     new ETP('./css/style.css', {allChunks: true}),
     new HtmlWebpackPlugin({
       template: 'index.pug',
       filename: 'index.html',
-      title: 'Factor',
+      chunks: ['index'],
       cache: true,
       minify: {
         html5: true,
         minifyCSS: true,
         collapseWhitespace: false
       }
+    }),
+    new HtmlWebpackPlugin({
+      template: 'about.pug',
+      filename: 'about.html',
+      chunks: ['about'],
+      cache: true,
+      minify: {
+        html5: true,
+        minifyCSS: true,
+        collapseWhitespace: false
+      }
+    }),
+    new OptimizeCssAssetsPlugin({
+      assetNameRegExp: /\.optimize\.css$/g,
+      cssProcessor: require('cssnano'),
+      cssProcessorOptions: { discardComments: { removeAll: true } },
+      canPrint: true
     })
     // new StyleLintPlugin(lintStylesOptions)
   ]
