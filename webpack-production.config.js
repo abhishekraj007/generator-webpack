@@ -1,26 +1,35 @@
-'use strict'
+'use strict';
 
-const ETP = require('extract-text-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const ETP = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 // const HtmlCriticalPlugin = require('html-critical-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
+const path = require('path');
+const webpack = require('webpack');
 
-const webpack = require('webpack')
-const path = require('path')
+const PATHS = {
+  app: path.join(__dirname, 'src'),
+  build: path.join(__dirname, 'build')
+};
 
 module.exports = {
+
   entry: {
-    main: './src/js/main.js'
+    index: `${PATHS.app}/js/main.js`,
+    about: `${PATHS.app}/js/about.js`
   },
+
   output: {
     filename: './js/[name].bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
+
   module: {
+
     rules: [
       {
         test: /\.pug$/,
@@ -34,6 +43,7 @@ module.exports = {
           }
         ]
       },
+
       {
         test: /\.html$/,
         include: path.join(__dirname, 'src'),
@@ -44,6 +54,7 @@ module.exports = {
           }
         }
       },
+
       {
         test: /\.(jpg|jpeg|gif|png|svg)$/,
         exclude: /node_modules/,
@@ -56,6 +67,7 @@ module.exports = {
           }
         }
       },
+
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         exclude: path.join(__dirname, 'src/img'),
@@ -67,6 +79,7 @@ module.exports = {
           }
         }
       },
+
       {
         test: /\.scss$/,
         exclude: /node_modules/,
@@ -95,6 +108,7 @@ module.exports = {
           ]
         })
       },
+
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -105,6 +119,7 @@ module.exports = {
           }
         }
       }
+
     ]
   },
   resolve: {
@@ -140,7 +155,18 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.pug',
       filename: 'index.html',
-      title: 'Factor',
+      chunks: ['index'],
+      cache: true,
+      minify: {
+        html5: true,
+        minifyCSS: true,
+        collapseWhitespace: false
+      }
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/about.pug',
+      filename: 'about.html',
+      chunks: ['about'],
       cache: true,
       minify: {
         html5: true,
