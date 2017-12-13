@@ -24,8 +24,18 @@ module.exports = {
 
   entry: {
     // vendor: ['jquery'],
-    index: `${PATHS.app}/js/main.js`,
-    about: `${PATHS.app}/js/about.js`
+    // index: `${PATHS.app}/js/main.js`,
+    // about: `${PATHS.app}/js/about.js`,
+    'index': [
+      `${PATHS.app}/js/main.js`,
+      `${PATHS.app}/scss/main.scss`,
+      `${PATHS.app}/scss/common.scss`
+    ],
+    'about': [
+      `${PATHS.app}/js/about.js`,
+      `${PATHS.app}/scss/common.scss`
+    ]
+    // 'main': ['./scripts/main.js', './scss/main.scss']
   },
 
   devtool: 'source-map',
@@ -172,7 +182,7 @@ module.exports = {
         exclude: /\/node_modules/
       }
     }),
-    new ETP('./css/style.css', { allChunks: true }),
+    new ETP('./css/[name].css', { allChunks: true }),
     new CopyWebpackPlugin([
       {
         from: './src/img',
