@@ -27,11 +27,21 @@ module.exports = {
 
   entry: {
     // vendor: ['jquery'],
-    index: `${PATHS.app}/js/main.js`,
-    about: `${PATHS.app}/js/about.js`
+    // index: `${PATHS.app}/js/main.js`,
+    // about: `${PATHS.app}/js/about.js`,
+    'index': [
+      `${PATHS.app}/js/main.js`,
+      `${PATHS.app}/scss/main.scss`,
+      `${PATHS.app}/scss/common.scss`
+    ],
+    'about': [
+      `${PATHS.app}/js/about.js`,
+      `${PATHS.app}/scss/common.scss`
+    ]
+    // 'main': ['./scripts/main.js', './scss/main.scss']
   },
 
-  devtool: 'inline-source-map',
+  devtool: 'eval',
 
   output: {
     filename: './js/[name].bundle.js',
@@ -149,6 +159,10 @@ module.exports = {
   },
 
   resolve: {
+    modules: [
+      path.join(__dirname, 'src'),
+      'node_modules'
+    ],
     extensions: ['.js', '.es6']
   },
 
@@ -197,7 +211,7 @@ module.exports = {
         notes: ['Webpack Dev Server is up and running']
       }
     }),
-    new ETP('./css/style.css', {allChunks: true}),
+    new ETP('./css/[name].css', {allChunks: true}),
     new HtmlWebpackPlugin({
       template: 'index.pug',
       filename: 'index.html',

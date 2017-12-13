@@ -6,7 +6,7 @@ console.log('All hail Webpack 3!')
 // require('../index.pug')
 // require('../about.pug')
 
-require('../scss/main.scss')
+// require('../scss/main.scss')
 
 console.warn('Modular Programming.')
 
