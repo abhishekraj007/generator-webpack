@@ -1,5 +1,4 @@
-# Factor Marketing Site
-- Yeoman generator with webpack, PUG, SCSS. 
+# Webpack Project Scaffolding Boilerplate 
 
 ## Features
 - Webpack
