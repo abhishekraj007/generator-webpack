@@ -33,6 +33,7 @@ module.exports = {
     'import/default': 2,
     'import/export': 2,
     'no-console': 0,
-    'semi': 0
+		'semi': 0,
+		'no-undef': 0
   }
 }

@@ -14,6 +14,10 @@ const PATHS = {
   build: path.join(__dirname, 'build')
 }
 
+const app = {
+  port: 3000
+};
+
 const lintStylesOptions = {
   context: path.resolve(__dirname, `${PATHS.app}/scss`),
   syntax: 'scss',
@@ -26,19 +30,16 @@ module.exports = {
   context: PATHS.app,
 
   entry: {
-    // vendor: ['jquery'],
-    // index: `${PATHS.app}/js/main.js`,
-    // about: `${PATHS.app}/js/about.js`,
+    vendor: [
+      `${PATHS.app}/js/vendor.js`
+    ],
     'index': [
-      `${PATHS.app}/js/main.js`,
-      `${PATHS.app}/scss/main.scss`,
-      `${PATHS.app}/scss/common.scss`
+      `${PATHS.app}/js/main.js`
+      // `${PATHS.app}/scss/main.scss`
     ],
     'about': [
-      `${PATHS.app}/js/about.js`,
-      `${PATHS.app}/scss/common.scss`
+      `${PATHS.app}/js/about.js`
     ]
-    // 'main': ['./scripts/main.js', './scss/main.scss']
   },
 
   devtool: 'eval',
@@ -77,18 +78,6 @@ module.exports = {
           }
         ]
       },
-
-      {
-        test: /\.html$/,
-        include: path.join(__dirname, 'src'),
-        use: {
-          loader: 'html-loader',
-          options: {
-            minimize: false
-          }
-        }
-      },
-
       {
         test: /\.(jpg|jpeg|gif|png|svg|webp)$/,
         exclude: /node_modules/,
@@ -115,8 +104,8 @@ module.exports = {
       },
 
       {
-        test: /\.scss$/,
-        exclude: /node_modules/,
+        test: /\.(scss|css)$/,
+        // exclude: /node_modules/,
         use: ['css-hot-loader'].concat(ETP.extract({
           fallback: 'style-loader',
           use: [
@@ -191,23 +180,19 @@ module.exports = {
         'NODE_ENV': process.env.NODE_ENV
       }
     }),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'vendor',
-    //   // filename: "vendor.js"
-    //   // (Give the chunk a different name)
-
-    //   minChunks: Infinity
-    //   // (with more entries, this ensures that no other module
-    //   //  goes into the vendor chunk)
-    // }),
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery'
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor'],
+      filename: './js/[name].js'
+    }),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
     new FriendlyErrorsWebpackPlugin({
       compilationSuccessInfo: {
-        messages: ['You application is running here http://localhost:3000'],
+        messages: [`You application is running here http://localhost: ${app.port}`],
         notes: ['Webpack Dev Server is up and running']
       }
     }),
@@ -215,18 +200,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: 'index.pug',
       filename: 'index.html',
-      chunks: ['index'],
-      cache: true,
-      minify: {
-        html5: true,
-        minifyCSS: true,
-        collapseWhitespace: false
-      }
-    }),
-    new HtmlWebpackPlugin({
-      template: 'about.pug',
-      filename: 'about.html',
-      chunks: ['about'],
+      chunks: ['index', 'vendor'],
       cache: true,
       minify: {
         html5: true,

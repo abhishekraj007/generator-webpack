@@ -1,0 +1,13 @@
+<svg class="factor-svg-line factor-svg-line--1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="616" height="105" viewBox="0 0 616 105">
+    <defs>
+        <path id="5mhoa" d="M456 1707s6.93 27 71 27h458s83-3.02 83 74"/>
+        <clipPath id="5mhob">
+            <use fill="#fff" xlink:href="#5mhoa"/>
+        </clipPath>
+    </defs>
+    <g>
+        <g opacity=".2" transform="translate(-453 -1705)">
+            <use fill="#fff" fill-opacity="0" stroke="#068ff6" stroke-dasharray="8 4" stroke-miterlimit="50" stroke-width="4" clip-path="url(&quot;#5mhob&quot;)" xlink:href="#5mhoa"/>
+        </g>
+    </g>
+</svg>

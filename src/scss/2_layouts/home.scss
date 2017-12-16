@@ -48,6 +48,7 @@
   &-1 {
     background: url('./img/batman.jpg') no-repeat;
     background-size: cover;
+    background-position: center;
   }
 
   &-2 {
@@ -59,3 +60,6 @@
   }
 }
 
+.svg-line {
+	width: 100%;
+}

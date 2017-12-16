@@ -1,7 +1,5 @@
 'use strict';
 
-import $ from 'jquery';
-
 console.warn('Global import is loading');
 
 (function () {

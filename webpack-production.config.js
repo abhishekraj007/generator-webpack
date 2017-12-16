@@ -7,13 +7,16 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // const HtmlCriticalPlugin = require('html-critical-webpack-plugin');
+// var ImageMinPlugin = require('imagemin-webpack-plugin').default;
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 // const ManifestPlugin = require('webpack-manifest-plugin');
 // const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
-var ImageMinPlugin = require('imagemin-webpack-plugin').default;
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const path = require('path');
+const glob = require('glob');
 const webpack = require('webpack');
+const PurifyCSSPlugin = require('purifycss-webpack');
 
 const PATHS = {
   app: path.join(__dirname, 'src'),
@@ -23,19 +26,12 @@ const PATHS = {
 module.exports = {
 
   entry: {
-    // vendor: ['jquery'],
-    // index: `${PATHS.app}/js/main.js`,
-    // about: `${PATHS.app}/js/about.js`,
-    'index': [
-      `${PATHS.app}/js/main.js`,
-      `${PATHS.app}/scss/main.scss`,
-      `${PATHS.app}/scss/common.scss`
+    vendor: [
+      `${PATHS.app}/js/vendor.js`
     ],
-    'about': [
-      `${PATHS.app}/js/about.js`,
-      `${PATHS.app}/scss/common.scss`
+    'index': [
+      `${PATHS.app}/js/main.js`
     ]
-    // 'main': ['./scripts/main.js', './scss/main.scss']
   },
 
   devtool: 'source-map',
@@ -66,31 +62,6 @@ module.exports = {
           }
         ]
       },
-
-      {
-        test: /\.html$/,
-        include: path.join(__dirname, 'src'),
-        use: {
-          loader: 'html-loader',
-          options: {
-            minimize: false
-          }
-        }
-      },
-
-      // {
-      //   test: /\.(jpg|jpeg|gif|png|svg)$/,
-      //   exclude: /node_modules/,
-      //   include: path.join(__dirname, 'src/img'),
-      //   use: {
-      //     loader: 'url-loader',
-      //     options: {
-      //       name: 'img/[name].[ext]',
-      //       publicPath: '../'
-      //     }
-      //   }
-      // },
-
       {
         test: /\.(jpg|jpeg|gif|png|svg)$/,
         exclude: /node_modules/,
@@ -117,8 +88,8 @@ module.exports = {
       },
 
       {
-        test: /\.scss$/,
-        exclude: /node_modules/,
+        test: /\.(scss|css)$/,
+        // exclude: /node_modules/,
         use: ETP.extract({
           fallback: 'style-loader',
           use: [
@@ -193,36 +164,29 @@ module.exports = {
         to: './fonts'
       }
     ]),
-    new ImageMinPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
-    new ImageMinPlugin({
-      test: /\.png$/i,
-      optipng: {
-        optimizationLevel: 6
-      }
-    }),
-    new ImageMinPlugin({
-      minFileSize: 10000, // Only apply this one to files over 10kb
-      jpegtran: { progressive: true }
-    }),
-    // new webpack.ProvidePlugin({
-    //   $: 'jquery',
-    //   jQuery: 'jquery'
+    // new ImageMinPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
+    // new ImageMinPlugin({
+    //   test: /\.png$/i,
+    //   optipng: {
+    //     optimizationLevel: 6
+    //   }
     // }),
+    // new ImageMinPlugin({
+    //   minFileSize: 10000, // Only apply this one to files over 10kb
+    //   jpegtran: { progressive: true }
+    // }),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      names: ['vendor'],
+      filename: './js/[name].js'
+    }),
     new HtmlWebpackPlugin({
       template: './src/index.pug',
       filename: 'index.html',
-      chunks: ['index'],
-      cache: true,
-      minify: {
-        html5: true,
-        minifyCSS: true,
-        collapseWhitespace: false
-      }
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/about.pug',
-      filename: 'about.html',
-      chunks: ['about'],
+      chunks: ['vendor', 'index'],
       cache: true,
       minify: {
         html5: true,
@@ -239,6 +203,41 @@ module.exports = {
       cssProcessor: require('cssnano'),
       cssProcessorOptions: { discardComments: { removeAll: true } },
       canPrint: true
+    }),
+    new PurifyCSSPlugin({
+      // Give paths to parse for rules. These should be absolute!
+      paths: glob.sync(path.join(__dirname, 'src/*.pug'))
+    }),
+    new BundleAnalyzerPlugin({
+      // Can be `server`, `static` or `disabled`.
+      // In `server` mode analyzer will start HTTP server to show bundle report.
+      // In `static` mode single HTML file with bundle report will be generated.
+      // In `disabled` mode you can use this plugin to just generate Webpack Stats JSON file by setting `generateStatsFile` to `true`.
+      analyzerMode: 'server',
+      // Host that will be used in `server` mode to start HTTP server.
+      analyzerHost: '127.0.0.1',
+      // Port that will be used in `server` mode to start HTTP server.
+      analyzerPort: 8888,
+      // Path to bundle report file that will be generated in `static` mode.
+      // Relative to bundles output directory.
+      reportFilename: 'report.html',
+      // Module sizes to show in report by default.
+      // Should be one of `stat`, `parsed` or `gzip`.
+      // See "Definitions" section for more information.
+      defaultSizes: 'parsed',
+      // Automatically open report in default browser
+      openAnalyzer: true,
+      // If `true`, Webpack Stats JSON file will be generated in bundles output directory
+      generateStatsFile: false,
+      // Name of Webpack Stats JSON file that will be generated if `generateStatsFile` is `true`.
+      // Relative to bundles output directory.
+      statsFilename: 'stats.json',
+      // Options for `stats.toJson()` method.
+      // For example you can exclude sources of your modules from stats file with `source: false` option.
+      // See more options here: https://github.com/webpack/webpack/blob/webpack-1/lib/Stats.js#L21
+      statsOptions: null,
+      // Log level. Can be 'info', 'warn', 'error' or 'silent'.
+      logLevel: 'info'
     })
     // new HtmlCriticalPlugin({
     //   base: path.join(path.resolve(__dirname), 'dist/'),
@@ -247,8 +246,8 @@ module.exports = {
     //   inline: true,
     //   minify: true,
     //   extract: true,
-    //   width: 375,
-    //   height: 565,
+    //   width: 320,
+    //   height: 567,
     //   penthouse: {
     //     blockJSRequests: false
     //   }
