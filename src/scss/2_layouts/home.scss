@@ -43,23 +43,57 @@
 
 .section {
   height: 100vh;
-  width: 100%;
+	width: 100%;
 
-  &-1 {
-    background: url('./img/batman.jpg') no-repeat;
-    background-size: cover;
-    background-position: center;
-  }
+	&--intro {
+		background: #076585;  /* fallback for old browsers */
+		background: -webkit-linear-gradient(to right, #fff, #076585);  /* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to right, #fff, #076585); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
-  &-2 {
-    background-color: rgb(25, 100, 59);
-  }
+	}
+	&--content {
+		position: relative;
+		background-color: #dcdcdc;
+	}
+	&--parallax {
+		height: 500px;
+		overflow: hidden;
+		position: relative;
+		background-color: grey;
 
-  &-3 {
-    background-color: red;
-  }
+	}
 }
 
-.svg-line {
+body {
+	margin: 0;
+	font-family: sans-serif;
+}
+
+main {
+	position: relative;
+}
+
+.flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.bcg {
+	background: url('./img/batman.jpg') no-repeat;
+	background-size: cover;
+	background-position: center;
+	padding: 150px;
+	position: absolute;
+	height: 190%;
 	width: 100%;
+	z-index: 1;
+	opacity: 0.6;
+}
+.content-wrapper {
+	position: relative;
+	z-index: 2;
+	* {
+		color: #076585;
+	}
 }

@@ -181,7 +181,8 @@ module.exports = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor'],
-      filename: './js/[name].js'
+			filename: './js/[name].js',
+			minChunks: ({ resource }) => /node_modules/.test(resource)
     }),
     new HtmlWebpackPlugin({
       template: './src/index.pug',

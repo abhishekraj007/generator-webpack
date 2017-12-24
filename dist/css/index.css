@@ -1,89 +1,75 @@
-.loader {
-  height: 100vh;
-  -webkit-box-flex: 1;
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  -webkit-transform: translateY(0%);
-  -ms-transform: translateY(0%);
-  -o-transform: translateY(0%);
-  transform: translateY(0%);
-  -webkit-transition: -webkit-transform 1s ease;
-  transition: -webkit-transform 1s ease;
-  -o-transition: -o-transform 1s ease;
-  transition: transform 1s ease;
-  transition: transform 1s ease, -webkit-transform 1s ease, -o-transform 1s ease;
-}
-
-.loader.active {
-  -webkit-transform: translateY(100%);
-  -ms-transform: translateY(100%);
-  -o-transform: translateY(100%);
-  transform: translateY(100%);
-}
-
-.loader-container {
-  width: 100%;
-  height: 100vh;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  overflow: hidden;
-}
-
-.loader--1 {
-  background-color: white;
-  -webkit-transition-delay: 1100ms;
-  -o-transition-delay: 1100ms;
-  transition-delay: 1100ms;
-}
-
-.loader--2 {
-  background-color: grey;
-  -webkit-transition-delay: 1000ms;
-  -o-transition-delay: 1000ms;
-  transition-delay: 1000ms;
-}
-
-.loader--3 {
-  background-color: rebeccapurple;
-  -webkit-transition-delay: 900ms;
-  -o-transition-delay: 900ms;
-  transition-delay: 900ms;
-}
-
-.loader--4 {
-  background-color: grey;
-  -webkit-transition-delay: 800ms;
-  -o-transition-delay: 800ms;
-  transition-delay: 800ms;
-}
-
-.loader--5 {
-  background-color: rebeccapurple;
-  -webkit-transition-delay: 700ms;
-  -o-transition-delay: 700ms;
-  transition-delay: 700ms;
-}
-
 .section {
   height: 100vh;
   width: 100%;
 }
 
-.section-1 {
+.section--intro {
+  background: #076585;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #fff, #076585);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-gradient(linear, left top, right top, from(#fff), to(#076585));
+  background: -webkit-linear-gradient(left, #fff, #076585);
+  background: -o-linear-gradient(left, #fff, #076585);
+  background: linear-gradient(to right, #fff, #076585);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.section--content {
+  position: relative;
+  background-color: #dcdcdc;
+}
+
+.section--parallax {
+  height: 500px;
+  overflow: hidden;
+  position: relative;
+  background-color: grey;
+}
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+main {
+  position: relative;
+}
+
+.flex-center {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.bcg {
   background: url("./../img/batman.jpg") no-repeat;
   -webkit-background-size: cover;
   background-size: cover;
   background-position: center;
+  padding: 150px;
+  position: absolute;
+  height: 190%;
+  width: 100%;
+  z-index: 1;
+  opacity: 0.6;
 }
 
-.section-2 {
-  background-color: #19643b;
+.content-wrapper {
+  position: relative;
+  z-index: 2;
 }
 
-.section-3 {
-  background-color: red;
+.content-wrapper * {
+  color: #076585;
 }
 /*# sourceMappingURL=index.css.map*/
