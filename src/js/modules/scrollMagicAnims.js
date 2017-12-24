@@ -6,11 +6,20 @@ import 'imports-loader?define=>false!scrollmagic/scrollmagic/uncompressed/plugin
 
 const controller = new ScrollMagic.Controller();
 
+const introTween = new TimelineMax();
+
+introTween
+	.add(
+		TweenMax.fromTo('.title1', 1, {scale: 1, autoAlpha: 0.3, y: -200}, {scale: 1, autoAlpha: 1, y: 100})
+	);
+
 const scene1 = new ScrollMagic.Scene({
 	triggerElement: '.section--intro',
 	triggerHook: 0,
+	duration: '100%'
 })
 .setPin('.section--intro', {pushFollowers: false})
+.setTween(introTween)
 .addIndicators({
 	name: 'intro'
 })
@@ -20,7 +29,7 @@ const scene2 = new ScrollMagic.Scene({
 	triggerElement: '.section--content',
 	triggerHook: 0,
 })
-.setPin('.section--intro', {pushFollowers: false})
+// .setPin('.section--intro', {pushFollowers: false})
 .addIndicators({
 	name: 'second'
 })

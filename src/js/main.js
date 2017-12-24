@@ -1,3 +1,4 @@
+require('../scss/main.scss')
 import './modules/scrollMagicAnims';
 import './modules/parallaxAnim';
 
@@ -7,4 +8,3 @@ console.log('All hail Webpack 3!')
 // require('../index.pug')
 // require('../about.pug')
 
-require('../scss/main.scss')

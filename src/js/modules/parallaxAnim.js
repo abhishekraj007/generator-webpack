@@ -9,14 +9,13 @@ const controller = new ScrollMagic.Controller();
 const parallaxTween = new TimelineMax();
 
 parallaxTween
-	.from('.bcg', 1, {y: '20%', ease: Power0.easeNone})
+	.from('.bcg', 1, {y: '-30%', ease: Power0.easeNone})
 	.from('content-wrapper',1, {y: '0%', ease: Power0.easeNone});
 
 const scene = new ScrollMagic.Scene({
 	triggerElement: '.section--parallax',
 	triggerHook: 1,
-	duration: '200%',
-	offset: '-10'
+	duration: '100%'
 })
 .setTween(parallaxTween)
 .addIndicators({
