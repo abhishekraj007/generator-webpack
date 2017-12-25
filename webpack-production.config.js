@@ -33,7 +33,9 @@ module.exports = {
       `${PATHS.app}/js/main.js`
     ]
   },
-
+	node: {
+    fs: 'empty'
+  },
   devtool: 'source-map',
 
   output: {
@@ -49,6 +51,15 @@ module.exports = {
         test: /\.js$/,
         use: ['source-map-loader'],
         enforce: 'pre'
+			},
+			{
+        test: /\.modernizrrc.js$/,
+        use: [ 'modernizr-loader' ]
+      },
+
+      {
+        test: /\.modernizrrc(\.json)?$/,
+        use: [ 'modernizr-loader', 'json-loader' ]
       },
       {
         test: /\.pug$/,
@@ -137,7 +148,10 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.js', '.es6']
+		extensions: ['.js', '.es6'],
+		alias: {
+      modernizr$: path.resolve(__dirname, '.modernizrrc')
+    }
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
