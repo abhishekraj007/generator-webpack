@@ -11,7 +11,13 @@ const AUTOPREFIXER_BROWSERS = [
 
 module.exports = {
   plugins: [
-    require('autoprefixer')({browsers: AUTOPREFIXER_BROWSERS})
+    // require('precss'),
+    require('autoprefixer')({browsers: AUTOPREFIXER_BROWSERS}),
+    require('postcss-cssnext'),
+    require('postcss-custom-media'),
+    require('postcss-nesting'),
+    require('postcss-flexbugs-fixes'),
+    require('postcss-fixes')({ preset: 'safe' })
   ]
 }
 ;

@@ -105,7 +105,13 @@ module.exports = {
               loader: 'resolve-url-loader'
             },
             {
-              loader: 'postcss-loader'
+              loader: 'postcss-loader',
+              options: {
+                config: {
+                  path: './postcss.config.js'
+                },
+                sourceMap: true
+              }
             },
             {
               loader: 'sass-loader',

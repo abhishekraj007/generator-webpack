@@ -11,7 +11,7 @@ let webpack = require('webpack');
 
 const PATHS = {
   app: path.join(__dirname, 'src'),
-  build: path.join(__dirname, 'build')
+  build: path.join(__dirname, 'dist')
 }
 
 const app = {
@@ -120,7 +120,13 @@ module.exports = {
               loader: 'resolve-url-loader'
             },
             {
-              loader: 'postcss-loader'
+              loader: 'postcss-loader',
+              options: {
+                config: {
+                  path: './postcss.config.js'
+                },
+                sourceMap: true
+              }
             },
             {
               loader: 'sass-loader',
@@ -169,6 +175,7 @@ module.exports = {
     port: 8000,
     quiet: true,
     hot: true,
+    compress: true,
     stats: 'errors-only',
     contentBase: './src',
     watchContentBase: true,
