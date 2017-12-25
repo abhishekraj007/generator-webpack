@@ -12,8 +12,8 @@ const AUTOPREFIXER_BROWSERS = [
 module.exports = {
   plugins: [
     // require('precss'),
-    require('autoprefixer')({browsers: AUTOPREFIXER_BROWSERS}),
-    require('postcss-cssnext'),
+    // require('autoprefixer')({browsers: AUTOPREFIXER_BROWSERS}),
+    require('postcss-cssnext')({browsers: AUTOPREFIXER_BROWSERS}),
     require('postcss-custom-media'),
     require('postcss-nesting'),
     require('postcss-flexbugs-fixes'),

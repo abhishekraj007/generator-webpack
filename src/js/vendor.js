@@ -2,9 +2,6 @@
 // import '../../node_modules/aos/src/sass/aos.scss';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import 'popper.js';
-// import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import Modernizr from 'modernizr';
 
-$(document).on('ready', function () {
-  alert('Dom loaded');
-});
+// import 'bootstrap/dist/js/bootstrap.bundle.min.js';

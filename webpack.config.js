@@ -28,7 +28,9 @@ const lintStylesOptions = {
 module.exports = {
 
   context: PATHS.app,
-
+  node: {
+    fs: 'empty'
+  },
   entry: {
     vendor: [
       `${PATHS.app}/js/vendor.js`
@@ -67,6 +69,16 @@ module.exports = {
       },
 
       {
+        test: /\.modernizrrc.js$/,
+        use: [ 'modernizr-loader' ]
+      },
+
+      {
+        test: /\.modernizrrc(\.json)?$/,
+        use: [ 'modernizr-loader', 'json-loader' ]
+      },
+
+      {
         test: /\.pug$/,
         include: path.join(__dirname, 'src'),
         use: [
@@ -78,6 +90,7 @@ module.exports = {
           }
         ]
       },
+
       {
         test: /\.(jpg|jpeg|gif|png|svg|webp)$/,
         exclude: /node_modules/,
@@ -158,7 +171,10 @@ module.exports = {
       path.join(__dirname, 'src'),
       'node_modules'
     ],
-    extensions: ['.js', '.es6']
+    extensions: ['.js', '.es6'],
+    alias: {
+      modernizr$: path.resolve(__dirname, '.modernizrrc')
+    }
     // alias: {
     //   'TweenLite': path.resolve('node_modules', 'gsap/src/uncompressed/TweenLite.js'),
     //   'TweenMax': path.resolve('node_modules', 'gsap/src/uncompressed/TweenMax.js'),
