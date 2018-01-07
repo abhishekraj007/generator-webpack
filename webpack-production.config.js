@@ -74,18 +74,42 @@ module.exports = {
         ]
       },
       {
-        test: /\.(jpg|jpeg|gif|png|svg)$/,
-        exclude: /node_modules/,
-        include: path.join(__dirname, 'src/img'),
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: 'img/[name].[ext]',
-            publicPath: './'
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loaders: ['file-loader?context=src/img/&name=img/[path][name].[ext]', { // images loader
+          loader: 'image-webpack-loader',
+          query: {
+            mozjpeg: {
+              progressive: true
+            },
+            gifsicle: {
+              interlaced: false
+            },
+            optipng: {
+              optimizationLevel: 4
+            },
+            pngquant: {
+              quality: '75-90',
+              speed: 3
+            },
+            svgo: {
+              plugins: [
+                {
+                  removeViewBox: false
+                },
+                {
+                  removeEmptyAttrs: false
+                }
+              ]
+            },
+            // Specifying webp here will create a WEBP version of your JPG/PNG images
+            webp: {
+              quality: 75
+            }
           }
-        }
+        }],
+        exclude: /node_modules/,
+        include: __dirname
       },
-
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         exclude: path.join(__dirname, 'src/img'),

@@ -92,18 +92,42 @@ module.exports = {
       },
 
       {
-        test: /\.(jpg|jpeg|gif|png|svg|webp)$/,
-        exclude: /node_modules/,
-        include: path.join(__dirname, 'src/img'),
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: 'img/[name].[ext]',
-            publicPath: './'
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loaders: ['file-loader?context=src/img/&name=img/[path][name].[ext]', { // images loader
+          loader: 'image-webpack-loader',
+          query: {
+            mozjpeg: {
+              progressive: true
+            },
+            gifsicle: {
+              interlaced: false
+            },
+            optipng: {
+              optimizationLevel: 4
+            },
+            pngquant: {
+              quality: '75-90',
+              speed: 3
+            },
+            svgo: {
+              plugins: [
+                {
+                  removeViewBox: false
+                },
+                {
+                  removeEmptyAttrs: false
+                }
+              ]
+            },
+            // Specifying webp here will create a WEBP version of your JPG/PNG images
+            webp: {
+              quality: 75
+            }
           }
-        }
+        }],
+        exclude: /node_modules/,
+        include: __dirname
       },
-
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         exclude: path.join(__dirname, 'src/img'),
@@ -175,15 +199,6 @@ module.exports = {
     alias: {
       modernizr$: path.resolve(__dirname, '.modernizrrc')
     }
-    // alias: {
-    //   'TweenLite': path.resolve('node_modules', 'gsap/src/uncompressed/TweenLite.js'),
-    //   'TweenMax': path.resolve('node_modules', 'gsap/src/uncompressed/TweenMax.js'),
-    //   'TimelineLite': path.resolve('node_modules', 'gsap/src/uncompressed/TimelineLite.js'),
-    //   'TimelineMax': path.resolve('node_modules', 'gsap/src/uncompressed/TimelineMax.js'),
-    //   'ScrollMagic': path.resolve('node_modules', 'scrollmagic/scrollmagic/uncompressed/ScrollMagic.js'),
-    //   'animation.gsap': path.resolve('node_modules', 'scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap.js'),
-    //   'debug.addIndicators': path.resolve('node_modules', 'scrollmagic/scrollmagic/uncompressed/plugins/debug.addIndicators.js')
-    // }
   },
 
   devServer: {
