@@ -345,6 +345,7 @@ module.exports = {
       //   fileName: 'manifest.json'
       // }),
       // new DynamicCdnWebpackPlugin(),
+      new webpack.optimize.ModuleConcatenationPlugin(),      
       new OptimizeCssAssetsPlugin({
         assetNameRegExp: /\.optimize\.css$/g,
         cssProcessor: require('cssnano'),

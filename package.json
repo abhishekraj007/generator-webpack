@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prod2": "cross-env NODE_ENV=production webpack",
     "dev": "webpack-dev-server --env.NODE_ENV=development --open --inline --watch",
-    "prod": "webpack --env.production --config webpack-production.config.js",
+    "prod": "cross-env NODE_ENV=production webpack",
     "clean": "rimraf ./dist"
   },
   "author": "",
