@@ -5,9 +5,27 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-let path = require('path');
-let webpack = require('webpack');
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const ManifestPlugin = require('webpack-manifest-plugin');
+// var ImageMinPlugin = require('imagemin-webpack-plugin').default;
+// const HtmlCriticalPlugin = require('html-critical-webpack-plugin');
+// const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
+
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+console.log(
+  `Running webpack in the ${isProduction ? 'production' : 'development'} mode`,
+);
+
+const path = require('path');
+const glob = require('glob');
+const webpack = require('webpack');
+const PurifyCSSPlugin = require('purifycss-webpack');
 
 const PATHS = {
   app: path.join(__dirname, 'src'),
@@ -28,9 +46,9 @@ const lintStylesOptions = {
 module.exports = {
 
   context: PATHS.app,
-  node: {
-    fs: 'empty'
-  },
+  // node: {
+  //   fs: 'empty'
+  // },
   entry: {
     vendor: [
       `${PATHS.app}/js/vendor.js`
@@ -44,29 +62,34 @@ module.exports = {
     ]
   },
 
-  devtool: 'eval',
+  devtool: isProduction ?  'source-map' : 'eval',
 
   output: {
     filename: './js/[name].bundle.js',
+    sourceMapFilename: '[file].map',
     path: PATHS.build
   },
 
   module: {
 
     rules: [
-
       {
         test: /\.js$/,
-        enforce: 'pre',
-        exclude: /node_modules/,
-        use: {
-          loader: 'eslint-loader',
-          options: {
-            emitWarning: true,
-            formatter: require('eslint-friendly-formatter')
-          }
-        }
-      },
+        use: ['source-map-loader'],
+        enforce: 'pre'
+			},
+      // {
+      //   test: /\.js$/,
+      //   enforce: 'pre',
+      //   exclude: /node_modules/,
+      //   use: {
+      //     loader: 'eslint-loader',
+      //     options: {
+      //       emitWarning: true,
+      //       formatter: require('eslint-friendly-formatter')
+      //     }
+      //   }
+      // },
 
       {
         test: /\.modernizrrc.js$/,
@@ -191,10 +214,10 @@ module.exports = {
   },
 
   resolve: {
-    modules: [
-      path.join(__dirname, 'src'),
-      'node_modules'
-    ],
+    // modules: [
+    //   path.join(__dirname, 'src'),
+    //   'node_modules'
+    // ],
     extensions: ['.js', '.es6'],
     alias: {
       modernizr$: path.resolve(__dirname, '.modernizrrc')
@@ -221,10 +244,21 @@ module.exports = {
       warnings: true
     }
   },
+
+  //Plugins Config
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': process.env.NODE_ENV
+    // new webpack.DefinePlugin({
+    //   'process.env': {
+    //     'NODE_ENV': process.env.NODE_ENV
+    //   }
+    // }),
+    new webpack.LoaderOptionsPlugin({
+      // Options...
+      options: {
+        resolveUrlLoader: {
+          keepQuery: true
+          // sourceMap: true
+        }
       }
     }),
     new webpack.ProvidePlugin({
@@ -233,21 +267,26 @@ module.exports = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor'],
-      filename: './js/[name].js'
+			filename: './js/[name].js',
+			minChunks: module =>
+        module.context && module.context.includes('node_modules'),
     }),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
-    new FriendlyErrorsWebpackPlugin({
-      compilationSuccessInfo: {
-        messages: [`You application is running here http://localhost: ${app.port}`],
-        notes: ['Webpack Dev Server is up and running']
-      }
-    }),
-    new ETP('./css/[name].css', {allChunks: true}),
+    new ETP('./css/[name].css', { allChunks: true }),
     new HtmlWebpackPlugin({
       template: 'index.pug',
       filename: 'index.html',
       chunks: ['index', 'vendor'],
+      cache: true,
+      minify: {
+        html5: true,
+        minifyCSS: true,
+        collapseWhitespace: false
+      }
+    }),
+    new HtmlWebpackPlugin({
+      template: 'about.pug',
+      filename: 'about.html',
+      chunks: ['about', 'vendor'],
       cache: true,
       minify: {
         html5: true,
@@ -262,9 +301,119 @@ module.exports = {
       canPrint: true
     }),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.DEBUG': JSON.stringify(process.env.DEBUG)
-    })
+      'process.env.NODE_ENV': '"production"',
+    }),
     // new StyleLintPlugin(lintStylesOptions)
   ]
+  .concat(
+    isProduction
+    ?
+    //If Production run these
+    [
+      new CleanWebpackPlugin(['dist']),
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          ie8: false,
+          ecma: 8,
+          mangle: false,
+          sourceMap: true,
+          exclude: /\/node_modules/
+        }
+      }),
+      new CopyWebpackPlugin([
+        {
+          from: './img',
+          to: './img'
+        },
+        {
+          from: './fonts',
+          to: './fonts'
+        }
+      ]),
+      // new ImageMinPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
+      // new ImageMinPlugin({
+      //   test: /\.png$/i,
+      //   optipng: {
+      //     optimizationLevel: 6
+      //   }
+      // }),
+      // new ImageMinPlugin({
+      //   minFileSize: 10000, // Only apply this one to files over 10kb
+      //   jpegtran: { progressive: true }
+      // }),
+      // new ManifestPlugin({
+      //   fileName: 'manifest.json'
+      // }),
+      // new DynamicCdnWebpackPlugin(),
+      new OptimizeCssAssetsPlugin({
+        assetNameRegExp: /\.optimize\.css$/g,
+        cssProcessor: require('cssnano'),
+        cssProcessorOptions: { discardComments: { removeAll: true } },
+        canPrint: true
+      }),
+      new PurifyCSSPlugin({
+        // Give paths to parse for rules. These should be absolute!
+        paths: glob.sync(path.join(__dirname, 'src/**/*.pug'))
+      }),
+      new BundleAnalyzerPlugin({
+        // Can be `server`, `static` or `disabled`.
+        // In `server` mode analyzer will start HTTP server to show bundle report.
+        // In `static` mode single HTML file with bundle report will be generated.
+        // In `disabled` mode you can use this plugin to just generate Webpack Stats JSON file by setting `generateStatsFile` to `true`.
+        analyzerMode: 'static',
+        // Host that will be used in `server` mode to start HTTP server.
+        analyzerHost: '127.0.0.1',
+        // Port that will be used in `server` mode to start HTTP server.
+        analyzerPort: 8888,
+        // Path to bundle report file that will be generated in `static` mode.
+        // Relative to bundles output directory.
+        reportFilename: 'report.html',
+        // Module sizes to show in report by default.
+        // Should be one of `stat`, `parsed` or `gzip`.
+        // See "Definitions" section for more information.
+        defaultSizes: 'parsed',
+        // Automatically open report in default browser
+        openAnalyzer: true,
+        // If `true`, Webpack Stats JSON file will be generated in bundles output directory
+        generateStatsFile: false,
+        // Name of Webpack Stats JSON file that will be generated if `generateStatsFile` is `true`.
+        // Relative to bundles output directory.
+        statsFilename: 'stats.json',
+        // Options for `stats.toJson()` method.
+        // For example you can exclude sources of your modules from stats file with `source: false` option.
+        // See more options here: https://github.com/webpack/webpack/blob/webpack-1/lib/Stats.js#L21
+        statsOptions: null,
+        // Log level. Can be 'info', 'warn', 'error' or 'silent'.
+        logLevel: 'info'
+      })
+      // new HtmlCriticalPlugin({
+      //   base: path.join(path.resolve(__dirname), 'dist/'),
+      //   src: 'index.html',
+      //   dest: 'index.html',
+      //   inline: true,
+      //   minify: true,
+      //   extract: true,
+      //   width: 320,
+      //   height: 567,
+      //   penthouse: {
+      //     blockJSRequests: false
+      //   }
+      // })
+    ]
+    //If not production then run these
+    :
+    [
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.NamedModulesPlugin(),
+      new FriendlyErrorsWebpackPlugin({
+        compilationSuccessInfo: {
+          messages: [`You application is running here http://localhost: ${app.port}`],
+          notes: ['Webpack Dev Server is up and running']
+        }
+      }),
+      // Force writing the HTML files to disk when running in the development mode
+      // (otherwise, webpack-dev-server won’t serve the app)
+      // new HtmlWebpackHarddiskPlugin(),
+    ]
+  )
 };

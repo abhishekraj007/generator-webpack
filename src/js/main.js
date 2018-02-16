@@ -1,4 +1,9 @@
+'use strict';
+
 require('../scss/main.scss')
 
-console.log('All hail Webpack 3!')
+$(document).ready(()=>{
+    console.log('All hail Webpack 3!');
+    $('.title1').text('Well how about now');
+});
 
