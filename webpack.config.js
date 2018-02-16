@@ -224,6 +224,13 @@ module.exports = {
     }
   },
 
+
+  //External CDN Libs
+  externals: {
+    jquery: 'jQuery',
+    // aos: 'AOS'
+  },
+
   devServer: {
     open: true,
     port: 8000,
@@ -261,10 +268,10 @@ module.exports = {
         }
       }
     }),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery'
-    }),
+    // new webpack.ProvidePlugin({
+    //   $: 'jquery',
+    //   jQuery: 'jquery'
+    // }),
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor'],
 			filename: './js/[name].js',
@@ -411,7 +418,7 @@ module.exports = {
           messages: [`You application is running here http://localhost: ${app.port}`],
           notes: ['Webpack Dev Server is up and running']
         }
-      }),
+      })
       // Force writing the HTML files to disk when running in the development mode
       // (otherwise, webpack-dev-server won’t serve the app)
       // new HtmlWebpackHarddiskPlugin(),
