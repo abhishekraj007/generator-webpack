@@ -1,7 +1,6 @@
 'use strict';
 
-console.log('Welcome to the about page');
-
-$(document).on('ready', () => {
+$(document).ready(() => {
+  console.log('Welcome to the about page');
   alert('Dom loaded');
 });
