@@ -18,9 +18,7 @@ var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlug
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-console.log(
-  `Running webpack in the ${isProduction ? 'production' : 'development'} mode`,
-);
+console.log(`Running webpack in the ${isProduction ? 'production' : 'development'} mode`);
 
 const path = require('path');
 const glob = require('glob');
@@ -39,8 +37,8 @@ const app = {
 const lintStylesOptions = {
   context: path.resolve(__dirname, `${PATHS.app}/scss`),
   syntax: 'scss',
-  emitErrors: false
-  // fix: true,
+  emitErrors: false,
+//   fix: true,
 }
 
 module.exports = {
@@ -78,18 +76,18 @@ module.exports = {
         use: ['source-map-loader'],
         enforce: 'pre'
 			},
-      // {
-      //   test: /\.js$/,
-      //   enforce: 'pre',
-      //   exclude: /node_modules/,
-      //   use: {
-      //     loader: 'eslint-loader',
-      //     options: {
-      //       emitWarning: true,
-      //       formatter: require('eslint-friendly-formatter')
-      //     }
-      //   }
-      // },
+      {
+        test: /\.js$/,
+        enforce: 'pre',
+        exclude: /node_modules/,
+        use: {
+          loader: 'eslint-loader',
+          options: {
+            emitWarning: true,
+            formatter: require('eslint-friendly-formatter')
+          }
+        }
+      },
 
       {
         test: /\.modernizrrc.js$/,
@@ -115,7 +113,8 @@ module.exports = {
       },
 
       {
-        test: /\.(jpe?g|png|gif|svg)$/i,
+		test: /\.(jpe?g|png|gif|svg)$/i,
+		exclude: /node_modules/,
         loaders: ['file-loader?context=src/img/&name=img/[path][name].[ext]', { // images loader
           loader: 'image-webpack-loader',
           query: {
@@ -202,12 +201,21 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env', 'es2015', 'es2015-ie']
-          }
-        }
+        use: [
+			{
+				loader: 'babel-loader',
+				options: {
+					presets: ['env', 'es2015', 'es2015-ie']
+				}
+			},
+			{
+				loader: 'eslint-loader',
+				options: {
+				  emitWarning: true,
+				  formatter: require('eslint-friendly-formatter')
+				}
+			}
+		]
       }
 
     ]
@@ -309,7 +317,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
-    }),
+    })
     // new StyleLintPlugin(lintStylesOptions)
   ]
   .concat(
@@ -352,7 +360,7 @@ module.exports = {
       //   fileName: 'manifest.json'
       // }),
       // new DynamicCdnWebpackPlugin(),
-      new webpack.optimize.ModuleConcatenationPlugin(),      
+      new webpack.optimize.ModuleConcatenationPlugin(),
       new OptimizeCssAssetsPlugin({
         assetNameRegExp: /\.optimize\.css$/g,
         cssProcessor: require('cssnano'),
