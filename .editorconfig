@@ -1,11 +1,16 @@
+# editorconfig.org
 root = true
 
-# General settings for whole project
 [*]
-indent_style = tab
-indent_size = 2
-tab_width = 2
-end_of_line = lf
+indent_size = 4
 charset = utf-8
-trim_trailing_whitespace = true
+end_of_line = crlf
+indent_style = tab
 insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.php]
+indent_size = 4
