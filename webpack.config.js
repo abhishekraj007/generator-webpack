@@ -64,7 +64,8 @@ module.exports = {
 
   output: {
     filename: './js/[name].bundle.js',
-    sourceMapFilename: '[file].map',
+	sourceMapFilename: '[file].map',
+	chunkFilename: '[name].bundle.js',
     path: PATHS.build
   },
 
@@ -280,12 +281,6 @@ module.exports = {
     //   $: 'jquery',
     //   jQuery: 'jquery'
     // }),
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor'],
-			filename: './js/[name].js',
-			minChunks: module =>
-        module.context && module.context.includes('node_modules'),
-    }),
     new ETP('./css/[name].css', { allChunks: true }),
     new HtmlWebpackPlugin({
       template: 'index.pug',
